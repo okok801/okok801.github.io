@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>番茄鐘待辦工具</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1, h2 { color: #333; }
+        h1 { text-align: center; } /* 確保標題居中 */
+        .timer, .todo, .youtube { margin-bottom: 20px; }
+        #time { font-size: 2em; margin: 10px 0; }
+        button { padding: 5px 10px; margin-right: 5px; }
+        input, select { margin-bottom: 10px; padding: 5px; }
+        #todo-list { list-style-type: none; padding: 0; }
+        #todo-list li { cursor: pointer; padding: 5px; margin: 5px 0; background-color: #f0f0f0; }
+        #todo-list li.done { text-decoration: line-through; background-color: #e0e0e0; }
+        #youtube-player { margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <h1>番茄鐘待辦工具</h1>
+        <div class='timer'>
+            <h2>番茄鐘</h2>
+            <select id='timer-duration'>
+                <option value="1">1分鐘</option>
+                <option value="5">5分鐘</option>
+                <option value="10">10分鐘</option>
+                <option value="15">15分鐘</option>
+                <option value="20">20分鐘</option>
+                <option value="25" selected>25分鐘</option>
+            </select>
+            <div id='time'>25:00</div>
+            <button id='start-timer'>開始</button>
+            <button id='reset-timer'>重設</button>
+        </div>
+        <div class='todo'>
+            <h2>待辦事項</h2>
+            <input type='text' id='new-todo' placeholder='添加新的待辦事項'/>
+            <button id='add-todo'>添加</button>
+            <ul id='todo-list'></ul>
+        </div>
+        <div class='youtube'>
+            <h2>YouTube 影片 (時間到自動播放)</h2>
+            <input type='text' id='youtube-link' placeholder='輸入YouTube影片連結'/>
+            <button id='confirm-youtube'>確認</button>
+            <div id='youtube-status'></div>
+            <div id='youtube-player'></div>
+        </div>
+    </div>
+    <script>
+        let timer;
+        let timeLeft;
+        let youtubeVideoId = null;
+        const timeDisplay = document.getElementById('time');
+        const startButton = document.getElementById('start-timer');
+        const resetButton = document.getElementById('reset-timer');
+        const timerDuration = document.getElementById('timer-duration');
+        const todoInput = document.getElementById('new-todo');
+        const addTodoButton = document.getElementById('add-todo');
+        const todoList = document.getElementById('todo-list');
+        const youtubeLink = document.getElementById('youtube-link');
+        const youtubePlayer = document.getElementById('youtube-player');
+        const confirmYoutubeButton = document.getElementById('confirm-youtube');
+        const youtubeStatus = document.getElementById('youtube-status');
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timeDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        function startTimer() {
+            clearInterval(timer);
+            timeLeft = timerDuration.value * 60;
+            updateTimerDisplay();
+            timer = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    updateTimerDisplay();
+                } else {
+                    clearInterval(timer);
+                    playYoutubeVideo(); // 直接播放影片，不顯示警告
+                }
+            }, 1000);
+        }
+
+        function resetTimer() {
+            clearInterval(timer);
+            timeLeft = timerDuration.value * 60;
+            updateTimerDisplay();
+        }
+
+        function addTodo() {
+            const todoText = todoInput.value.trim();
+            if (todoText !== '') {
+                const li = document.createElement('li');
+                li.textContent = todoText;
+                li.addEventListener('click', () => li.classList.toggle('done'));
+                todoList.appendChild(li);
+                todoInput.value = '';
+            }
+        }
+
+        function confirmYoutubeLink() {
+            const link = youtubeLink.value;
+            const videoId = extractVideoId(link);
+            if (videoId) {
+                youtubeVideoId = videoId;
+                youtubeStatus.textContent = '影片連結已設置成功！';
+                youtubeLink.value = '';
+            } else {
+                youtubeStatus.textContent = '請輸入有效的YouTube影片連結';
+            }
+        }
+
+        function playYoutubeVideo() {
+            if (youtubeVideoId) {
+                youtubePlayer.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${youtubeVideoId}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            } else {
+                youtubeStatus.textContent = '未設置YouTube影片連結';
+            }
+        }
+
+        function extractVideoId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        startButton.addEventListener('click', startTimer);
+        resetButton.addEventListener('click', resetTimer);
+        timerDuration.addEventListener('change', resetTimer);
+        addTodoButton.addEventListener('click', addTodo);
+        todoInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') addTodo(); });
+        confirmYoutubeButton.addEventListener('click', confirmYoutubeLink);
+    </script>
+</body>
+</html>
+番茄鐘~程式.txt
+目前顯示的是「番茄鐘~程式.txt」。
