@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>換行去除器</title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css'>
+  <link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<nav>
+  <div class="nav-title">換行去除器</div>
+  <div class="spacer"></div>
+  <button class="nav-button"><i class="fa-solid fa-gear"></i></button>
+</nav>
+<div class="main-button-container">
+  <div class="spacer"></div>
+  <button class="main-button copy-button" disabled>複製</button>
+  <button class="main-button deepl-button">DeepL</button>
+  <button class="main-button baidu-button">百度翻譯</button>
+</div>
+<textarea name="main" class="result-textbox" cols="30" rows="10" placeholder="有些pdf文件，在你複製裡面的文字以後，會產生多餘的換行。在這個網站裡，每次你在文本框中貼上文本，網站就會讀取你剪貼簿中的文字，去掉句子中間多餘的換行。"></textarea>
+<!-- partial -->
+  <script src="./script.js" defer></script>
+
+</body>
+</html>
